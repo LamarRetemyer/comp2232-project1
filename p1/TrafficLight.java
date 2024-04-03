@@ -33,14 +33,5 @@ public class TrafficLight {
     public void setColour(Light colour) {
         this.colour = colour;
     }
-
-    // Enum representing the traffic light colours
-    public enum Light {
-        RED,
-        GREEN
-    }
-
-   
-  
 }
 

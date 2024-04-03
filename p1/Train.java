@@ -91,13 +91,6 @@ public class Train {
     public void setCurrentLocation(Station currentLocation) {
         this.currentLocation = currentLocation;
     }
-
-    // Example usage
-    // public static void main(String[] args) {
-    //     Train train1 = new Train(1);
-    //     train1.register(5);
-    //     train1.start();
-    //     System.out.println(train1.currentStation());
-    // }
+    
 }
 

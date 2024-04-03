@@ -6,29 +6,38 @@ public class Route {
     private String name;
     private boolean isRoundTrip;
     private RSStatus status;
-    private Station start;
-    private Station end;
-    private Set<Segment> segments;
+    // private Station start;
+    // private Station end;
+    private List<Segment> segments;
 
-    public Route(String name, boolean isRoundTrip, Station start, Station end) {
+    public Route(String name, boolean isRoundTrip, List<Segment> segments) {
         this.name = name;
         this.isRoundTrip = isRoundTrip;
-        this.status = RSStatus.OPEN;
-        this.start = start;
-        this.end = end;
-        this.segments = new HashSet<>();
+        this.status = RSStatus.OPEN;        
+        this.segments = new ArrayList<Segment>();
     }
+
+    // start = start;
+    // end = end;
 
     public boolean isRoundTrip() {
         return isRoundTrip;
     }
 
     public Station getStart() {
-        return start;
+        return segments.get(0).getStart();
+    }
+
+    public void setStart(Station start){
+        this.start = start;
     }
 
     public Station getEnd() {
-        return end;
+        return segments.get(segments.size()-1).getSEND();
+    }
+
+    public void setEnd(Station end){
+        this.end = end; 
     }
 
     public Station getNextStation(String station) {
@@ -50,7 +59,7 @@ public class Route {
         segments.add(segment);
     }
 
-    public void addSegments(OrderedSet<Segment> segments) {
+    public void addSegments(Set<Segment> segments) {
         // Logic to add multiple segments
     }
 
@@ -80,12 +89,23 @@ public class Route {
     }
 
     // Getters and setters for private fields
+    public String getName(){
+        return name; 
+    }
+
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public RSStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(RSStatus status) {
+        this.status = status;
+    }
 }
 
-enum RSStatus {
-    OPEN,
-    CLOSED
-}
 
 
 

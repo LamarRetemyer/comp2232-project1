@@ -5,12 +5,16 @@ public class Segment {
     private RSStatus status;
     private Train train;
     private TrafficLight trafficLight;
+    private Station start;
+    private Station sEnd;
 
-    public Segment(String name) {
+    public Segment(String name, Station start, Station sEnd) {
         this.name = name;
         this.status = RSStatus.OPEN;
         this.train = null;
-        this.trafficLight = new TrafficLight();
+        this.trafficLight = new TrafficLight(1, Light.RED);
+        this.start = start;
+        this.sEnd = sEnd;
     }
 
     public boolean hasTrain() {
@@ -38,7 +42,7 @@ public class Segment {
     }
 
     public boolean lightColour() {
-        return trafficLight.getColour() == TrafficLight.Light.GREEN;
+        return trafficLight.getColour() == Light.GREEN;
     }
 
     public boolean verify() {
@@ -86,21 +90,26 @@ public class Segment {
         this.trafficLight = trafficLight;
     }
 
-    // Example usage
-    public static void main(String[] args) {
-        Segment segment1 = new Segment("Segment A");
-        Train train1 = new Train(1);
-        segment1.acceptTrain(train1);
-        segment1.changeLight();
-        System.out.println("Train in segment: " + segment1.hasTrain()); // Output: Train in segment: false
-        System.out.println("Light colour: " + segment1.lightColour()); // Output: Light colour: true
+    public Station getStart() {
+        return start;
     }
+
+    public void setStart(Station start){
+        this.start = start;
+    }
+    
+    public Station getSEND() {
+        return sEnd;
+    }
+
+  
+    public void setSEnd(Station end){
+        this.sEnd = end;
+    }
+
 }
 
-enum RSStatus {
-    OPEN,
-    CLOSED
-}
 
 
-}
+
+

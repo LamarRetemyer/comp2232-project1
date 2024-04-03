@@ -66,12 +66,7 @@ public class Station {
 
     public void setTrain(Train train) {
         this.train = train;
-    }    
-
-    enum RSStatus {
-        OPEN,
-        CLOSED
-    }
+    }       
     
 }
 
