@@ -6,61 +6,88 @@ public class Route {
     private String name;
     private boolean isRoundTrip;
     private RSStatus status;
-    // private Station start;
-    // private Station end;
     private List<Segment> segments;
+    private List<Station> stations;
 
-    public Route(String name, boolean isRoundTrip, List<Segment> segments) {
+    public Route(String name, boolean isRoundTrip, List<Station> stations) {
         this.name = name;
         this.isRoundTrip = isRoundTrip;
-        this.status = RSStatus.OPEN;        
-        this.segments = new ArrayList<Segment>();
+        this.status = RSStatus.OPEN;
+            
+        this.stations = new ArrayList<Station>();
     }
 
-    // start = start;
-    // end = end;
+   
 
     public boolean isRoundTrip() {
         return isRoundTrip;
     }
 
     public Station getStart() {
-        return segments.get(0).getStart();
+        return stations.get(0);
     }
-
-    public void setStart(Station start){
-        this.start = start;
-    }
+ 
 
     public Station getEnd() {
-        return segments.get(segments.size()-1).getSEND();
+        return stations.get(stations.size()-1);
     }
-
-    public void setEnd(Station end){
-        this.end = end; 
-    }
+  
 
     public Station getNextStation(String station) {
-        // Logic to find the next station based on the route
-        return null; // Placeholder
+        // Find the index of the given station in the stations list
+        int index = -1;
+        for (int i = 0; i < stations.size(); i++) {
+            if (stations.get(i).getName().equals(station)) {
+                index = i;
+                break;
+            }
+        }
+    
+        // If the station was found and it's not the last station, return the next station
+        if (index != -1 && index < stations.size() - 1) {
+            return stations.get(index + 1);
+        } else {
+            return null; // No next station or station not found
+        }
     }
+    
 
     public Station getPreviousStation(String station) {
-        // Logic to find the previous station based on the route
-        return null; // Placeholder
+    // Find the index of the given station in the stations list
+    int index = -1;
+    for (int i = 0; i < stations.size(); i++) {
+        if (stations.get(i).getName().equals(station)) {
+            index = i;
+            break;
+        }
     }
 
-    public boolean canGetTo(String station) {
-        // Logic to check if the station can be reached from this route
-        return true; // Placeholder
+    // If the station was found and it's not the first station, return the previous station
+    if (index > 0 && index < stations.size()) {
+        return stations.get(index - 1);
+    } else {
+        return null; // No previous station or station not found
     }
+}
+
+      
+
+    public boolean canGetTo(String station) {        
+        for (Station s : stations) {
+            if (s.getName().equals(station)) {
+                return true; // Station can be reached
+            }
+        }
+        return false; // Station cannot be reached
+    }   
+    
 
     public void addSegment(Segment segment) {
         segments.add(segment);
     }
 
     public void addSegments(Set<Segment> segments) {
-        // Logic to add multiple segments
+        this.segments.addAll(segments);       
     }
 
     public void removeSegment(String segment) {
@@ -72,8 +99,16 @@ public class Route {
     }
 
     public void changeLight(String startOfSegment) {
-        // Logic to change the traffic light at the start of the segment
+        // Find the segment with the given startOfSegment name
+        Segment targetSegment = segments.stream().filter(s -> s.getName().equals(startOfSegment)).findFirst().orElse(null);    
+        if (targetSegment != null) {
+            // Change the traffic light of the target segment
+            targetSegment.changeLight();
+        } else {
+            System.out.println("Segment not found.");
+        }
     }
+    
 
     public boolean verify() {
         // Logic to verify the route

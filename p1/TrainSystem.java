@@ -35,8 +35,7 @@ public class TrainSystem {
         stations.stream().filter(station -> station.getName().equals(sname)).forEach(Station::close);
     }
 
-    public void addSegment(String sname, String start, String sEnd){
-        stations.stream().filter(station -> station.getName().equals(start));
+    public void addSegment(String sname, Station start, Station sEnd){        
         Segment segment = new Segment(sname, start, sEnd);
         segments.add(segment);
     }
@@ -53,7 +52,7 @@ public class TrainSystem {
         segments.stream().filter(segment -> segment.getName().equals(sname)).forEach(Segment::close);
     }
 
-    public void addRoute(String rName, boolean isRoundTrip, List<Segment> rStations) {
+    public void addRoute(String rName, boolean isRoundTrip, List<Station> rStations) {
         routes.add(new Route(rName, isRoundTrip, rStations));
     }
 
@@ -71,7 +70,7 @@ public class TrainSystem {
 
     // Train methods
     public void addTrain() {
-        trains.add(new Train());//need to add an id
+        trains.add(new Train(trains.size()));//need to add an id
     }
 
     public void removeTrain(int id) {
@@ -79,8 +78,43 @@ public class TrainSystem {
     }
 
     public void registerTrain(int trainId, String routeName) {
-        trains.stream().filter(train -> train.getId() == trainId).findFirst().ifPresent(train -> train.register(getRouteByName(routeName)));
+        Train train = trains.stream().filter(t -> t.getId() == trainId).findFirst().orElse(null);
+        Route route = routes.stream().filter(r -> r.getName().equals(routeName)).findFirst().orElse(null);
+    
+        if (train != null && route != null) {
+            boolean isValidJourney = true;
+    
+            // Check if the journey traverses any closed segments or stops at closed stations
+            for (Segment segment : route.getSegments()) {
+                if (!segment.isOpen() || !segment.getSEnd().isOpen()) {
+                    isValidJourney = false;
+                    break;
+                }
+            }
+    
+            // Check if the journey stops at stations not on the stated route
+            List<Station> journeyStops = route.getStations();
+            journeyStops.remove(0); // Remove the start station
+            journeyStops.remove(journeyStops.size() - 1); // Remove the end station
+            for (Station stop : train.getStops()) {
+                if (!journeyStops.contains(stop)) {
+                    isValidJourney = false;
+                    break;
+                }
+            }
+    
+            if (isValidJourney) {
+                // Assuming approval received 2 time units ago
+                train.register(2); 
+            } else {
+                System.out.println("Invalid journey. Cannot register train.");
+            }
+        } else {
+            System.out.println("Train or route not found.");
+        }
     }
+    
+    
 
     public void deRegisterTrain(int trainId) {
         trains.stream().filter(train -> train.getId() == trainId).findFirst().ifPresent(Train::deregister);

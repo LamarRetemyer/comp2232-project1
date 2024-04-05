@@ -5,8 +5,8 @@ public class Segment {
     private RSStatus status;
     private Train train;
     private TrafficLight trafficLight;
-    private Station start;
-    private Station sEnd;
+    private Station  start;
+    private Station  sEnd;
 
     public Segment(String name, Station start, Station sEnd) {
         this.name = name;
