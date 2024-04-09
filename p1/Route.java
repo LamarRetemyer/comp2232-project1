@@ -1,6 +1,6 @@
 package p1;
-import java.util.*;
 
+import java.util.*;
 
 public class Route {
     private String name;
@@ -9,112 +9,215 @@ public class Route {
     private List<Segment> segments;
     private List<Station> stations;
 
-    public Route(String name, boolean isRoundTrip, List<Station> stations) {
+    public Route(String name, boolean isRoundTrip) {
         this.name = name;
         this.isRoundTrip = isRoundTrip;
-        this.status = RSStatus.OPEN;
-            
-        this.stations = new ArrayList<Station>();
+        this.status = RSStatus.CLOSED; // Initialize with closed status
+        this.stations = new ArrayList<>();
+        this.segments = new ArrayList<>();
     }
-
-   
 
     public boolean isRoundTrip() {
         return isRoundTrip;
     }
 
     public Station getStart() {
-        return stations.get(0);
+        if (!stations.isEmpty()) {
+            return stations.get(0); // Return the first station in the list
+        } else {
+            return null; // Return null if the list is empty
+        }
     }
- 
-
+    
     public Station getEnd() {
-        return stations.get(stations.size()-1);
+        if (!stations.isEmpty()) {
+            return stations.get(stations.size() - 1); // Return the last station in the list
+        } else {
+            return null; // Return null if the list is empty
+        }
     }
-  
-
+    
     public Station getNextStation(String station) {
-        // Find the index of the given station in the stations list
-        int index = -1;
+        int index = getStationIndex(station);
+        if (index != -1 && index + 1 < stations.size()) {
+            return stations.get(index + 1); // Return the station at the next index
+        } else {
+            return null; // Return null if the station is not found or if it's the last station
+        }
+    }
+
+    private int getStationIndex(String station) {
         for (int i = 0; i < stations.size(); i++) {
             if (stations.get(i).getName().equals(station)) {
-                index = i;
-                break;
+                return i; // Return the index if the station is found
+            }
+        }
+        return -1; // Return -1 if the station is not found
+    }
+
+    public String getPreviousStation(String stationName, boolean isAtStart) {
+        for (int i = 0; i < stations.size(); i++) {
+            Station station = stations.get(i);
+            if (station.getName().equals(stationName)) {
+                if (i == 0) {
+                    // Handle the case when the station is at the start of the route
+                    if (isAtStart) {
+                        // Could return null or handle differently as per requirements
+                        return null;
+                    } else {
+                        // Return the last station if it's a round trip and at the start
+                        return isRoundTrip ? stations.get(stations.size() - 1).getName() : null;
+                    }
+                } else {
+                    // Return the previous station's name
+                    return stations.get(i - 1).getName();
+                }
+            }
+        }
+        return null; // Station not found in the route
+    }
+    
+
+    public boolean canGetTo(String station) {
+        int stationIndex = getStationIndex(station);
+        if (stationIndex == -1) {
+            // Station not found in the route
+            return false;
+        }
+    
+        // Check if the route can get to the specified station
+        for (int i = 0; i < segments.size(); i++) {
+            Segment segment = segments.get(i);
+            if (i == segments.size() - 1 && segment.getEndStation().equals(station)) {
+                // Last segment's end station matches the specified station
+                return true;
+            }
+            if (segment.getStartStation().equals(station)) {
+                // Specified station is the start station of a segment
+                return true;
             }
         }
     
-        // If the station was found and it's not the last station, return the next station
-        if (index != -1 && index < stations.size() - 1) {
-            return stations.get(index + 1);
-        } else {
-            return null; // No next station or station not found
-        }
+        return false; // Specified station is not reachable from the current route
     }
-    
-
-    public Station getPreviousStation(String station) {
-    // Find the index of the given station in the stations list
-    int index = -1;
-    for (int i = 0; i < stations.size(); i++) {
-        if (stations.get(i).getName().equals(station)) {
-            index = i;
-            break;
-        }
-    }
-
-    // If the station was found and it's not the first station, return the previous station
-    if (index > 0 && index < stations.size()) {
-        return stations.get(index - 1);
-    } else {
-        return null; // No previous station or station not found
-    }
-}
-
-      
-
-    public boolean canGetTo(String station) {        
-        for (Station s : stations) {
-            if (s.getName().equals(station)) {
-                return true; // Station can be reached
-            }
-        }
-        return false; // Station cannot be reached
-    }   
     
 
     public void addSegment(Segment segment) {
         segments.add(segment);
     }
 
-    public void addSegments(Set<Segment> segments) {
-        this.segments.addAll(segments);       
-    }
-
-    public void removeSegment(String segment) {
-        segments.removeIf(s -> s.getName().equals(segment));
-    }
-
-    public boolean containsSegment(String segment) {
-        return segments.stream().anyMatch(s -> s.getName().equals(segment));
-    }
-
-    public void changeLight(String startOfSegment) {
-        // Find the segment with the given startOfSegment name
-        Segment targetSegment = segments.stream().filter(s -> s.getName().equals(startOfSegment)).findFirst().orElse(null);    
-        if (targetSegment != null) {
-            // Change the traffic light of the target segment
-            targetSegment.changeLight();
-        } else {
-            System.out.println("Segment not found.");
+    public void addSegments(LinkedHashSet<Segment> segments) {
+        for (Segment segment : segments) {
+            addSegment(segment);
         }
     }
     
 
-    public boolean verify() {
-        // Logic to verify the route
-        return true; // Placeholder
+    public void removeSegment(String segmentName) {
+        for (int i = 0; i < segments.size(); i++) {
+            Segment segment = segments.get(i);
+            if (segment.getName().equals(segmentName)) {
+                segments.remove(i); // Remove the segment at index i
+                System.out.println("Segment " + segmentName + " removed from the route.");
+                return;
+            }
+        }
+        System.out.println("Segment " + segmentName + " not found in the route.");
+    }
+    
+
+    public boolean containsSegment(String segmentName) {
+        for (Segment segment : segments) {
+            if (segment.getName().equals(segmentName)) {
+                return true; // Found the segment
+            }
+        }
+        return false; // Segment not found
+    }
+    
+
+    public void changeLight(String startOfSegment) {
+        // Find the segment based on the start station
+        Segment targetSegment = null;
+        for (Segment segment : segments) {
+            if (segment.getStartStation().equals(startOfSegment)) {
+                targetSegment = segment;
+                break;
+            }
+        }
+    
+        // If the segment is found, change its light
+        if (targetSegment != null) {
+            targetSegment.changeLight();
+        } else {
+            System.out.println("Segment starting at " + startOfSegment + " not found.");
+        }
     }
 
+    public void addStation(Station station) {
+        if (station != null && !stations.contains(station)) {
+            stations.add(station);
+        }
+    }
+
+    public boolean verify() {
+        // A. Check if the route's name is valid
+        if (name == null || name.trim().isEmpty()) {
+            return false;
+        }
+
+        // B. Check if the segments list is non-empty
+        if (segments == null || segments.isEmpty()) {
+            return false;
+        }
+
+        // C & D. Check for round trip consistency
+        Station startStation = segments.get(0).getStartStation();
+        Station endStation = segments.get(segments.size() - 1).getEndStation();
+        if (isRoundTrip && !startStation.equals(endStation)) {
+            return false;
+        }
+        if (!isRoundTrip && startStation.equals(endStation)) {
+            return false;
+        }
+
+        // E. Check if segments are properly sequenced
+        for (int i = 0; i < segments.size() - 1; i++) {
+            if (!segments.get(i).getEndStation().equals(segments.get(i + 1).getStartStation())) {
+                return false;
+            }
+        }
+
+        // F. Check for duplicate segments
+        Set<Segment> uniqueSegments = new HashSet<>(segments);
+        if (uniqueSegments.size() != segments.size()) {
+            return false;
+        }
+
+        // G. Verify each segment
+        for (Segment segment : segments) {
+            if (!segment.verify()) {
+                return false;
+            }
+        }
+
+        // H. Check for loops in non-round trip routes
+        if (!isRoundTrip) {
+            Set<Station> visitedStations = new HashSet<>();
+            for (Segment segment : segments) {
+                if (!visitedStations.add(segment.getStartStation())) {
+                    return false; // Loop detected
+                }
+            }
+        }
+
+        return true;
+    }
+
+    private ArrayList<Station> getStationList() {
+        return new ArrayList<>(this.stations);
+    }
+    
     public void close() {
         status = RSStatus.CLOSED;
     }
@@ -123,24 +226,33 @@ public class Route {
         status = RSStatus.OPEN;
     }
 
-    // Getters and setters for private fields
-    public String getName(){
-        return name; 
+    public String getName() {
+        return name;
     }
 
-    public void setName(String name){
+     public RSStatus getStatus() {
+        return status;
+    }
+
+    public List<Segment> getSegments() {
+        return segments;
+    }
+
+    // Setters
+    public void setName(String name) {
         this.name = name;
     }
 
-    public RSStatus getStatus() {
-        return status;
+    public void setRoundTrip(boolean roundTrip) {
+        isRoundTrip = roundTrip;
     }
 
     public void setStatus(RSStatus status) {
         this.status = status;
     }
+
+    public void setSegments(List<Segment> segments) {
+        this.segments = segments;
+    }
+    // Other methods specific to Route can be added
 }
-
-
-
-

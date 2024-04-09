@@ -5,16 +5,14 @@ public class Segment {
     private RSStatus status;
     private Train train;
     private TrafficLight trafficLight;
-    private Station  start;
-    private Station  sEnd;
+    private boolean isOccupied;
 
-    public Segment(String name, Station start, Station sEnd) {
+    public Segment(String name) {
         this.name = name;
-        this.status = RSStatus.OPEN;
-        this.train = null;
-        this.trafficLight = new TrafficLight(1, Light.RED);
-        this.start = start;
-        this.sEnd = sEnd;
+        this.status = RSStatus.CLOSED; // Initialize with closed status
+        this.train = null; // Initialize with no train
+        this.trafficLight = new TrafficLight(0); 
+        this.isOccupied = false;
     }
 
     public boolean hasTrain() {
@@ -25,30 +23,78 @@ public class Segment {
         return status == RSStatus.OPEN;
     }
 
-    public void acceptTrain(Train train) {
-        if (!hasTrain() && isOpen()) {
+    public boolean acceptTrain(Train train) {
+        if (isOpen() && !hasTrain()) {
             this.train = train;
-        } else {
-            System.out.println("Cannot accept train at this time.");
+            return true;
         }
+        return false;
     }
 
     public void releaseTrain() {
-        train = null;
+        if (hasTrain()) {
+            this.train = null;
+        }
     }
 
     public void changeLight() {
-        trafficLight.change();
+        if (this.isOccupied) {
+            this.trafficLight.setColour(Light.RED);
+        } else {
+            this.trafficLight.setColour(Light.GREEN);
+        }
     }
+
+    
+    
+    public void setOccupied(boolean occupied) {
+        this.isOccupied = occupied;
+        changeLight();
+    }
+
 
     public boolean lightColour() {
         return trafficLight.getColour() == Light.GREEN;
     }
 
-    public boolean verify() {
-        return isOpen() && !hasTrain();
+    public TrafficLight getTrafficLight() {
+        return trafficLight;
     }
 
+    public Station getStartStation() {
+        // Assuming the segment name format is "StartStation->EndStation"
+        String[] stations = name.split("->");
+        if (stations.length >= 2) {
+            return new Station(stations[0]); // Assuming Station constructor takes station name
+        } else {
+            return null; // Handle invalid segment name format
+        }
+    }
+
+    public Station getEndStation() {
+        // Assuming the segment name format is "StartStation->EndStation"
+        String[] stations = name.split("->");
+        if (stations.length >= 2) {
+            return new Station(stations[1]); // Assuming Station constructor takes station name
+        } else {
+            return null; // Handle invalid segment name format
+        }
+    }
+
+    public boolean verify() {
+        // Check if the segment name is valid
+        if (name == null || name.trim().isEmpty()) return false;
+
+        // Check if the traffic light is valid
+        if (trafficLight == null || trafficLight.getColour() == null) return false;
+
+        // Assuming the segment must not be occupied when it is closed
+        if (status == RSStatus.CLOSED && isOccupied) return false;
+
+        return true;
+    }
+
+    
     public void close() {
         status = RSStatus.CLOSED;
     }
@@ -57,59 +103,30 @@ public class Segment {
         status = RSStatus.OPEN;
     }
 
-    // Getters and setters for private fields
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public RSStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RSStatus status) {
-        this.status = status;
-    }
-
     public Train getTrain() {
         return train;
+    }
+
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setStatus(RSStatus status) {
+        this.status = status;
     }
 
     public void setTrain(Train train) {
         this.train = train;
     }
-
-    public TrafficLight getTrafficLight() {
-        return trafficLight;
-    }
-
-    public void setTrafficLight(TrafficLight trafficLight) {
-        this.trafficLight = trafficLight;
-    }
-
-    public Station getStart() {
-        return start;
-    }
-
-    public void setStart(Station start){
-        this.start = start;
-    }
-    
-    public Station getSEND() {
-        return sEnd;
-    }
-
-  
-    public void setSEnd(Station end){
-        this.sEnd = end;
-    }
-
+    // Other methods specific to Segment can be added
 }
-
-
-
-
 

@@ -1,14 +1,14 @@
 package p1;
 
-public class Station {
+public class Station{
     private String name;
     private RSStatus status;
     private Train train;
 
     public Station(String name) {
         this.name = name;
-        this.status = RSStatus.OPEN;
-        this.train = null;
+        this.status = RSStatus.CLOSED; // Initialize with closed status
+        this.train = null; // Initialize with no train
     }
 
     public boolean hasTrain() {
@@ -19,10 +19,6 @@ public class Station {
         return status == RSStatus.OPEN;
     }
 
-    public boolean verify() {
-        return isOpen() && !hasTrain();
-    }
-
     public void close() {
         status = RSStatus.CLOSED;
     }
@@ -31,44 +27,50 @@ public class Station {
         status = RSStatus.OPEN;
     }
 
-    public void acceptTrain(Train train) {
-        if (verify()) {
+    public boolean acceptTrain(Train train) {
+        if (isOpen() && !hasTrain()) {
             this.train = train;
-        } else {
-            System.out.println("Cannot accept train at this time.");
+            return true;
         }
+        return false;
     }
 
-    public void releaseTrain() {
-        train = null;
+    public boolean releaseTrain() {
+        if (hasTrain()) {
+            this.train = null;
+            return true;
+        }
+        return false;
     }
 
-    // Getters and setters
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public RSStatus getStatus() {
         return status;
     }
 
-    public void setStatus(RSStatus status) {
-        this.status = status;
-    }
-
     public Train getTrain() {
         return train;
     }
 
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean verify() {
+        return name != null && !name.trim().isEmpty();
+    }
+    
+
+    public void setStatus(RSStatus status) {
+        this.status = status;
+    }
+
     public void setTrain(Train train) {
         this.train = train;
-    }       
+    }
     
 }
-
-
-

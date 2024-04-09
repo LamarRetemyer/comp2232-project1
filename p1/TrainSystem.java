@@ -2,204 +2,488 @@ package p1;
 
 import java.util.*;
 
-
 public class TrainSystem {
-    private SystemStatus status;
-    private Set<Station> stations;
-    private List<Segment> segments;
-    private Set<Route> routes;
-    private Set<Train> trains;
-    
+    private String name;
+    private List<Route> trainRoutes;
+    private List<Train> trains;
+    private List<Station> stations;
+    private List<Segment> segments; // Added segments list
+    private Map<Integer, Train> trainMap; // To store trains by ID
+    private SystemStatus systemStatus; // Added field for system status
 
-    public TrainSystem(){
-        this.status = SystemStatus.Initialised;
-        this.stations = new HashSet<>();
-        this.segments = new ArrayList<>();
-        this.routes = new HashSet<>();
-        this.trains = new HashSet<>();
+    public TrainSystem(String name) {
+        this.name = name;
+        this.trainRoutes = new ArrayList<>();
+        this.trains = new ArrayList<>();
+        this.stations = new ArrayList<>();
+        this.segments = new ArrayList<>(); // Initialize segments list
+        this.trainMap = new HashMap<>();
+        this.systemStatus = SystemStatus.Initialised; // Initialize system status
     }
     
-    public void addStation(String sname){        
-        stations.add(new Station(sname));
+    // Station-related methods
+    public void addStation(String sname) {
+        Station newStation= new Station(sname);
+        stations.add(newStation);
+        System.out.println("Station " + sname + " added to " + name);      
     }
 
-    public void removeStation(String sname){
-        stations.removeIf(station -> station.getName().equals(sname));
+    public void removeStation(String sname) {
+        for (Station station : stations) {
+            if (station.getName().equals(sname)) {
+                stations.remove(station);
+                System.out.println("Station " + sname + " removed from " + name);
+                return;
+            }
+        }
+        System.out.println("Station " + sname + " not found.");
+    }
+        
+    public void openStation(String sname) {
+        for (Station station : stations) {
+            if (station.getName().equals(sname)) {
+                station.open();
+                System.out.println("Station " + sname + " is now open.");
+                return;
+            }
+        }
+        System.out.println("Station " + sname + " not found.");
+    }
+    
+
+    public void closeStation(String sname) {
+        for (Station station : stations) {
+            if (station.getName().equals(sname)) {
+                station.close(); // Assuming Station class has a close method
+                System.out.println("Station " + sname + " closed successfully.");
+                return;
+            }
+        }
+        System.out.println("Station " + sname + " not found.");
+    }
+    
+
+    // Segment-related methods
+    public void addSegment(String sname, String start, String sEnd) {
+        // Find the route that corresponds to the given route name (sname)
+        // Route targetRoute = null;
+        // for (Route route : trainRoutes) {
+        //     if (route.getName().equals(sname)) {
+        //         targetRoute = route;
+        //         break;
+        //     }
+        // }
+    
+        // if (targetRoute == null) {
+        //     System.out.println("Route " + sname + " not found.");
+        //     return;
+        // }
+    
+        // Create new segment based on start and end station names
+        Segment newSegment = new Segment(start + "->" + sEnd); // Assuming Segment constructor takes segment name
+    
+        // Add the segment to the route
+        segments.add(newSegment); // Assuming addSegment method in Route class
+    
+        System.out.println("Segment added to route " + sname + ": " + newSegment.getName());
+    }
+    
+
+    public void removeSegment(String sname) {
+        // Find the segment in the list of segments
+        Segment targetSegment = null;
+        for (Segment segment : segments) {
+            if (segment.getName().equals(sname)) {
+                targetSegment = segment;
+                break;
+            }
+        }
+    
+        if (targetSegment == null) {
+            System.out.println("Segment " + sname + " not found.");
+            return;
+        }
+    
+        // Remove the segment from the segments list
+        segments.remove(targetSegment);
+    
+        System.out.println("Segment " + sname + " removed.");
+    }
+    
+    
+
+    public void openSegment(String sname) {
+        // Find the segment in the list of segments
+        Segment targetSegment = null;
+        for (Segment segment : segments) {
+            if (segment.getName().equals(sname)) {
+                targetSegment = segment;
+                break;
+            }
+        }
+    
+        if (targetSegment == null) {
+            System.out.println("Segment " + sname + " not found.");
+            return;
+        }
+    
+        // Open the segment
+        targetSegment.open();
+    
+        System.out.println("Segment " + sname+ " opened.");
+    }
+    
+    
+
+    public void closeSegment(String sname) {
+        // Find the segment in the list of segments
+        Segment targetSegment = null;
+        for (Segment segment : segments) {
+            if (segment.getName().equals(sname)) {
+                targetSegment = segment;
+                break;
+            }
+        }
+    
+        if (targetSegment == null) {
+            System.out.println("Segment " + sname + " not found.");
+            return;
+        }
+    
+        // Close the segment
+        targetSegment.close();
+    
+        System.out.println("Segment " + sname + " closed.");
+    }
+    
+    
+
+    // Route-related methods
+    public void addRoute(String rName, boolean isRoundTrip, List<String> rStations) {
+        // Create a new Route object
+        Route newRoute = new Route(rName, isRoundTrip);
+    
+        // Add stations to the route
+        for (String stationName : rStations) {
+            Station station = getStationByName(stationName);
+            if (station != null) {
+                newRoute.addStation(station);
+            } else {
+                System.out.println("Station " + stationName + " not found.");
+            }
+        }
+    
+        // Add the new route to the trainRoutes list
+        trainRoutes.add(newRoute);
+    
+        System.out.println("Route " + rName + " added successfully.");
+    }
+    
+    
+
+    public boolean removeRoute(String sname) {
+        // Implement logic to remove a route
+        // ...
+        return false;
+    }
+    public void openRoute(String sname) {
+        for (Route route : trainRoutes) {
+            if (route.getName().equals(sname)) {
+                route.open();
+                System.out.println("Route " + sname + " is now open.");
+                return;
+            }
+        }
+        System.out.println("Route " + sname + " not found.");
     }
 
-    public void openStation(String sname){
-        stations.stream().filter(station -> station.getName().equals(sname)).forEach(Station::open);
+    public void closeRoute(String sname) {
+        for (Route route : trainRoutes) {
+            if (route.getName().equals(sname)) {
+                route.close();
+                System.out.println("Route " + sname + " is now closed.");
+                return;
+            }
+        }
+        System.out.println("Route " + sname + " not found.");
     }
 
-    public void closeStation(String sname){
-        stations.stream().filter(station -> station.getName().equals(sname)).forEach(Station::close);
-    }
-
-    public void addSegment(String sname, Station start, Station sEnd){        
-        Segment segment = new Segment(sname, start, sEnd);
-        segments.add(segment);
-    }
-
-    public void removeSegment(String sname){
-        segments.removeIf(segment -> segment.getName().equals(sname));
-    }
-
-    public void openSegment(String sname){
-        segments.stream().filter(segment -> segment.getName().equals(sname)).forEach(Segment::open);
-    }
-
-    public void closeSegment(String sname){
-        segments.stream().filter(segment -> segment.getName().equals(sname)).forEach(Segment::close);
-    }
-
-    public void addRoute(String rName, boolean isRoundTrip, List<Station> rStations) {
-        routes.add(new Route(rName, isRoundTrip, rStations));
-    }
-
-    public void removeRoute(String rName) {
-        routes.removeIf(route -> route.getName().equals(rName));
-    }
-
-    public void openRoute(String rName) {
-        routes.stream().filter(route -> route.getName().equals(rName)).forEach(Route::open);
-    }
-
-    public void closeRoute(String rName) {
-        routes.stream().filter(route -> route.getName().equals(rName)).forEach(Route::close);
-    }
-
-    // Train methods
+    // Train-related methods
     public void addTrain() {
-        trains.add(new Train(trains.size()));//need to add an id
+        // Generate a unique ID for the new train
+        int newTrainId = generateUniqueId();
+    
+        // Create a new Train object with the generated ID
+        Train newTrain = new Train(newTrainId);
+    
+        // Add the new train to the trains list
+        trains.add(newTrain);
+    
+        // Optionally, add the train to the trainMap for tracking by ID
+        trainMap.put(newTrainId, newTrain);
+    
+        System.out.println("Train with ID " + newTrainId + " added successfully.");
     }
+    
+    private int generateUniqueId() {
+        // Logic to generate a unique ID, such as incrementing a counter or using a UUID
+        // For simplicity, we'll use a counter in this example
+        return trains.size() + 1; // Incrementing the size of the trains list
+    }
+    
 
     public void removeTrain(int id) {
-        trains.removeIf(train -> train.getId() == id);
+        for (Train train : trains) {
+            if (train.getId() == id) {
+                trains.remove(train);
+                System.out.println("Train with ID " + id + " removed.");
+                return;
+            }
+        }
+        System.out.println("Train with ID " + id + " not found.");
     }
+    
 
     public void registerTrain(int trainId, String routeName) {
-        Train train = trains.stream().filter(t -> t.getId() == trainId).findFirst().orElse(null);
-        Route route = routes.stream().filter(r -> r.getName().equals(routeName)).findFirst().orElse(null);
-    
-        if (train != null && route != null) {
-            boolean isValidJourney = true;
-    
-            // Check if the journey traverses any closed segments or stops at closed stations
-            for (Segment segment : route.getSegments()) {
-                if (!segment.isOpen() || !segment.getSEnd().isOpen()) {
-                    isValidJourney = false;
-                    break;
-                }
+        // Find the train with the given ID
+        Train trainToRegister = null;
+        for (Train train : trains) {
+            if (train.getId() == trainId) {
+                trainToRegister = train;
+                break;
             }
-    
-            // Check if the journey stops at stations not on the stated route
-            List<Station> journeyStops = route.getStations();
-            journeyStops.remove(0); // Remove the start station
-            journeyStops.remove(journeyStops.size() - 1); // Remove the end station
-            for (Station stop : train.getStops()) {
-                if (!journeyStops.contains(stop)) {
-                    isValidJourney = false;
-                    break;
-                }
-            }
-    
-            if (isValidJourney) {
-                // Assuming approval received 2 time units ago
-                train.register(2); 
-            } else {
-                System.out.println("Invalid journey. Cannot register train.");
-            }
-        } else {
-            System.out.println("Train or route not found.");
         }
-    }
     
+        if (trainToRegister == null) {
+            System.out.println("Train with ID " + trainId + " not found.");
+            return;
+        }
+    
+        // Find the route with the given name
+        Route targetRoute = null;
+        for (Route route : trainRoutes) {
+            if (route.getName().equals(routeName)) {
+                targetRoute = route;
+                break;
+            }
+        }
+    
+        if (targetRoute == null) {
+            System.out.println("Route " + routeName + " not found.");
+            return;
+        }
+    
+        // Associate the train with the route
+        trainToRegister.changeRoute(targetRoute);
+        System.out.println("Train with ID " + trainId + " registered to route " + routeName);
+    }
     
 
     public void deRegisterTrain(int trainId) {
-        trains.stream().filter(train -> train.getId() == trainId).findFirst().ifPresent(Train::deregister);
+        // Find the train with the given ID
+        Train trainToDeRegister = null;
+        for (Train train : trains) {
+            if (train.getId() == trainId) {
+                trainToDeRegister = train;
+                break;
+            }
+        }
+    
+        if (trainToDeRegister == null) {
+            System.out.println("Train with ID " + trainId + " not found.");
+            return;
+        }
+    
+        // Deregister the train by setting its current route to null
+        trainToDeRegister.changeRoute(null);
+        System.out.println("Train with ID " + trainId + " deregistered successfully.");
+    }
+    
+
+    public boolean containsStation(String station) {
+        for (Station s : stations) {
+            if (s.getName().equals(station)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-   public boolean containsStation(String stationName){    
-    return stations.stream().anyMatch(station -> station.getName().equals(stationName));
-   }
-
-   public boolean containsSegment(String segmentName) {
-    return segments.stream().anyMatch(segment -> segment.getName().equals(segmentName));
+    // Check if a segment exists in the system
+    public boolean containsSegment(String segment) {
+        for (Route route : trainRoutes) {
+            if (route.containsSegment(segment)) {
+                return true;
+            }
+        }
+        return false;
     }
 
-    public boolean containsRoute(String routeName) {
-        return routes.stream().anyMatch(route -> route.getName().equals(routeName));
+    // Check if a route exists in the system
+    public boolean containsRoute(String route) {
+        for (Route r : trainRoutes) {
+            if (r.getName().equals(route)) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    // Check if a train exists in the system
     public boolean containsTrain(int trainId) {
-        return trains.stream().anyMatch(train -> train.getId() == trainId);
+        return trainMap.containsKey(trainId);
     }
 
-    public String getStationInfo(String stationName){
-        Station station = stations.stream().filter(s -> s.getName().equals(stationName)).findFirst().orElse(null);
+    public Station getStationByName(String stationName) {
+        for (Station station : stations) {
+            if (station.getName().equals(stationName)) {
+                return station;
+            }
+        }
+        return null;
+    }
+    // Get information about a segment
+    public String getStationInfo(String stationName) {
+        // Get the station by name
+        Station station = getStationByName(stationName);
+        
         if (station != null) {
-            return "Station Name: " + station.getName() + ", Status: " + station.getStatus();
+            // Gather information about the station
+            String info = "Station Name: " + station.getName() + "\n";
+            info += "Status: " + station.getStatus() + "\n";
+            info += "Train: " + (station.getTrain() != null ? station.getTrain().getId() : "None") + "\n";
+            // Add more information if needed
+            
+            return info;
         } else {
-            return "Station not found.";
+            return "Station not found: " + stationName;
         }
     }
-
-    public String getSegmentInfo(String segmentName) {
-    Segment segment = segments.stream()
-            .filter(s -> s.getName().equals(segmentName))
-            .findFirst()
-            .orElse(null);
-    if (segment != null) {
-        return "Segment Name: " + segment.getName() + ", Start: " + segment.getStart() + ", End: " + segment.getEnd() + ", Status: " + segment.getStatus();
-    } else {
-        return "Segment not found.";
+    
+    public Route getRouteByName(String routeName) {
+        for (Route route : trainRoutes) {
+            if (route.getName().equals(routeName)) {
+                return route;
+            }
+        }
+        return null; // Route not found
     }
-}
-
+    
+    // Get information about a route
     public String getRouteInfo(String routeName) {
-        Route route = routes.stream()
-                .filter(r -> r.getName().equals(routeName))
-                .findFirst()
-                .orElse(null);
+        // Find the route by name
+        Route route = getRouteByName(routeName);
+        
         if (route != null) {
-            return "Route Name: " + route.getName() + ", Round Trip: " + route.isRoundTrip() + ", Stations: " + route.getStations();
+            // Gather information about the route
+            String info = "Route Name: " + route.getName() + "\n";
+            info += "Round Trip: " + route.isRoundTrip() + "\n";
+            info += "Status: " + route.getStatus() + "\n";
+            info += "Segments: " + route.getSegments().size() + "\n";
+            // Add more information if needed
+            
+            return info;
         } else {
-            return "Route not found.";
+            return "Route not found: " + routeName;
         }
     }
+    
 
     public String getTrainInfo(int trainId) {
-        Train train = trains.stream()
-                .filter(t -> t.getId() == trainId)
-                .findFirst()
-                .orElse(null);
+        Train train = trainMap.get(trainId);
         if (train != null) {
-            return "Train ID: " + train.getId() + ", Current Segment: " + train.getCurrentSegment() + ", Route: " + train.getRoute();
+            return "Train info for ID " + trainId + ": Registered at " + train.getTimeRegistered()
+                    + ", Start Time: " + train.getStartTime() + ", Current Location: " + train.getCurrentLocation().getName();
         } else {
-            return "Train not found.";
+            return "Train with ID " + trainId + " not found.";
         }
     }
+    
+    public boolean verify() {
+        for (Station station : stations) {
+            if (!station.verify()) {
+                System.out.println("Verification failed for station: " + station.getName());
+                return false;
+            }
+        }
+        for (Segment segment : segments) {
+            if (!segment.verify()) {
+                System.out.println("Verification failed for segment: " + segment.getName());
+                return false;
+            }
+        }
+        for (Route route : trainRoutes) {
+            if (!route.verify()) {
+                System.out.println("Verification failed for route: " + route.getName());
+                return false;
+            }
+        }
+        for (Train train : trains) {
+            if (!train.verify()) {
+                System.out.println("Verification failed for train with ID: " + train.getId());
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    
 
     public void setToWorking() {
-        status = SystemStatus.Operational;
+        this.systemStatus = SystemStatus.Operational;
+        System.out.println("System status set to: " + this.systemStatus.getDescription());
     }
+        
+
+    // Set system status to paused
+    public void setPaused() {        
+        this.systemStatus = SystemStatus.Deadlocked;
+        System.out.println("System status set to: " + this.systemStatus.getDescription());
+    }    
     
-    public void setPaused() {
-        status = SystemStatus.Deadlocked;
-    }
-    
+
+    // Set system status to stopped
     public void setStopped() {
-        status = SystemStatus.Finished;
-    }
-    
-    public SystemStatus currentStatus() {
-        return status;
+        this.systemStatus = SystemStatus.Finished;
+        System.out.println("System status set to: " + this.systemStatus.getDescription());
     }
 
+    // Get current system status
+    public String currentStatus() {
+        return "Current system status: " + this.systemStatus.getDescription();
+    }
     
-    
+
+    public String getName() {
+        return name;
+    }
+
+    public List<Route> getTrainRoutes() {
+        return trainRoutes;
+    }
+
+    public List<Train> getTrains() {
+        return trains;
+    }
+
+    public List<Station> getStations() {
+        return stations;
+    }
+
+    // Setters
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setTrainRoutes(List<Route> trainRoutes) {
+        this.trainRoutes = trainRoutes;
+    }
+
+    public void setTrains(List<Train> trains) {
+        this.trains = trains;
+    }
+
+    public void setStations(List<Station> stations) {
+        this.stations = stations;
+    }
 }
-
-
-
