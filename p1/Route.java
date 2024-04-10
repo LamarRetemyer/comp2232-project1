@@ -17,95 +17,125 @@ public class Route {
         this.segments = new ArrayList<>();
     }
 
+    /** isRoundTrip determines whether a trip is round. 
+     * @param: NONE 
+     * @return A type BOOLEAN of whether the trips is round or not.
+     **/
     public boolean isRoundTrip() {
         return isRoundTrip;
     }
-
+    
+    /** getStart is a method that seeks to determine the first station in the list.
+     * @param: NONE
+     * @return An object station if there is one in the list, otherwise 'null' if the list is empty.
+     **/
     public Station getStart() {
         if (!stations.isEmpty()) {
-            return stations.get(0); // Return the first station in the list
+            return stations.get(0); 
         } else {
-            return null; // Return null if the list is empty
+            return null; 
         }
     }
     
+    /** getEnd is a method that seeks to determine the last station in the list.
+     * @param: NONE
+     * @return An object station if there is one in the list, otherwise 'null' if the list is empty.
+     */
     public Station getEnd() {
         if (!stations.isEmpty()) {
-            return stations.get(stations.size() - 1); // Return the last station in the list
+            return stations.get(stations.size() - 1); 
         } else {
-            return null; // Return null if the list is empty
+            return null; 
         }
     }
     
+    /** getNextStation is a method that determines the next station in the list after the designated station.
+     * @param station The string of the station object.
+     * @return An object station after the designated station or null if the station isn't found or if it's the last station in the list.
+     */
     public Station getNextStation(String station) {
         int index = getStationIndex(station);
         if (index != -1 && index + 1 < stations.size()) {
-            return stations.get(index + 1); // Return the station at the next index
+            return stations.get(index + 1); 
         } else {
-            return null; // Return null if the station is not found or if it's the last station
+            return null; 
         }
     }
 
+    /**getStationIndex is a method that determines the index of the station based on its name.
+     * @param station The string of the station object.
+     * @return An integer that represents the index of the station in the list. Returns -1 if the station isn't found.
+     */
     private int getStationIndex(String station) {
         for (int i = 0; i < stations.size(); i++) {
             if (stations.get(i).getName().equals(station)) {
-                return i; // Return the index if the station is found
+                return i; 
             }
         }
-        return -1; // Return -1 if the station is not found
+        return -1; 
     }
 
+    /** getPreviousStation is a method that determines the previous station's name based on a provided station and its position.
+     * @param stationName The string of the station object.
+     * @param isAtStart The boolean that determines whether a station is at the start of the route or not.
+     * @return Returns the string of the station that is the previous station of the provided station, otherwise return null if the provided station is the first station in the list.
+     */
     public String getPreviousStation(String stationName, boolean isAtStart) {
         for (int i = 0; i < stations.size(); i++) {
             Station station = stations.get(i);
             if (station.getName().equals(stationName)) {
                 if (i == 0) {
-                    // Handle the case when the station is at the start of the route
                     if (isAtStart) {
-                        // Could return null or handle differently as per requirements
                         return null;
                     } else {
-                        // Return the last station if it's a round trip and at the start
                         return isRoundTrip ? stations.get(stations.size() - 1).getName() : null;
                     }
                 } else {
-                    // Return the previous station's name
                     return stations.get(i - 1).getName();
                 }
             }
         }
-        return null; // Station not found in the route
+        return null; 
     }
     
 
+    /** canGetTo is a method that checks to see if a station is accessible in the route.
+     * @param station The string of the station object.
+     * @return A Boolean of false if it the station is not accesible and true if it is.
+     */
     public boolean canGetTo(String station) {
         int stationIndex = getStationIndex(station);
         if (stationIndex == -1) {
-            // Station not found in the route
             return false;
         }
     
-        // Check if the route can get to the specified station
+        
         for (int i = 0; i < segments.size(); i++) {
             Segment segment = segments.get(i);
             if (i == segments.size() - 1 && segment.getEndStation().equals(station)) {
-                // Last segment's end station matches the specified station
                 return true;
             }
             if (segment.getStartStation().equals(station)) {
-                // Specified station is the start station of a segment
                 return true;
             }
         }
     
-        return false; // Specified station is not reachable from the current route
+        return false; 
     }
     
 
+    /** addSegment is a method that adds an object segment to the route.
+     * @param segment The segment object to be added to the route.
+     * @return NONE
+     */
     public void addSegment(Segment segment) {
         segments.add(segment);
     }
 
+    /** addSegments is a method that adds multiple segment objects to the route.
+     * @param segments The segemnt objects to be added to the route
+     * @return NONE
+     */
     public void addSegments(LinkedHashSet<Segment> segments) {
         for (Segment segment : segments) {
             addSegment(segment);
@@ -113,11 +143,15 @@ public class Route {
     }
     
 
+    /** removeSegment is a method that removes a segment from the route.
+     * @param segmentName The string of the segmentName that should be removed.
+     * @return: NONE
+     */
     public void removeSegment(String segmentName) {
         for (int i = 0; i < segments.size(); i++) {
             Segment segment = segments.get(i);
             if (segment.getName().equals(segmentName)) {
-                segments.remove(i); // Remove the segment at index i
+                segments.remove(i); 
                 System.out.println("Segment " + segmentName + " removed from the route.");
                 return;
             }
@@ -126,18 +160,25 @@ public class Route {
     }
     
 
+    /** containsSegment is a method that checks a route to see if it contains a specific route.
+     * @param segmentName The string of the segmentName to be checked.
+     * @return Returns the boolean true if that specific name is found and false if it isn't.
+     */
     public boolean containsSegment(String segmentName) {
         for (Segment segment : segments) {
             if (segment.getName().equals(segmentName)) {
-                return true; // Found the segment
+                return true; 
             }
         }
-        return false; // Segment not found
+        return false; 
     }
     
 
+    /**changeLight is a method that changes the light of a segment.
+     * @param startOfSegment The string of where the start of the segment begins.
+     * @returns NONE
+     */
     public void changeLight(String startOfSegment) {
-        // Find the segment based on the start station
         Segment targetSegment = null;
         for (Segment segment : segments) {
             if (segment.getStartStation().equals(startOfSegment)) {
@@ -146,7 +187,7 @@ public class Route {
             }
         }
     
-        // If the segment is found, change its light
+        
         if (targetSegment != null) {
             targetSegment.changeLight();
         } else {
@@ -154,12 +195,19 @@ public class Route {
         }
     }
 
+    /** addStation is a method that adds a station to the route.
+     * @param station The station object to be added to the route.
+     * @return NONE
+     */
     public void addStation(Station station) {
         if (station != null && !stations.contains(station)) {
             stations.add(station);
         }
     }
 
+    /** verify is a validation method that seeks to ensure a number of things are consistent in the route. 
+     * @return Returns boolean value depending on if any of the various checks are correct.
+     */
     public boolean verify() {
         // A. Check if the route's name is valid
         if (name == null || name.trim().isEmpty()) {
