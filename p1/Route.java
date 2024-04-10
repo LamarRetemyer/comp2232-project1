@@ -266,19 +266,35 @@ public class Route {
         return new ArrayList<>(this.stations);
     }
     
+    /** the method close refers to the status of the route as closed.
+     * @param NONE
+     * @return NONE
+     */
     public void close() {
         status = RSStatus.CLOSED;
     }
 
+    /** the methode open refers to the status of the route as open
+     * @param NONE
+     * @return NONE
+     */
     public void open() {
         status = RSStatus.OPEN;
     }
 
+    /** The method getName simply returns the name of the route
+     * @param NONE
+     * @return The string object of the name of the route.
+     */
     public String getName() {
         return name;
     }
-
-     public RSStatus getStatus() {
+    
+    /** The method getStatus returns the status of the route
+     * @param NONE
+     * @return The enum referring to the status of the route.
+     */
+    public RSStatus getStatus() {
         return status;
     }
 
@@ -302,5 +318,5 @@ public class Route {
     public void setSegments(List<Segment> segments) {
         this.segments = segments;
     }
-    // Other methods specific to Route can be added
+   
 }

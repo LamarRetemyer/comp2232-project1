@@ -65,6 +65,10 @@ public class Train {
         }
     }
 
+    /** changeRoute is a method that allows a train to change its current route to another designated route.
+     * @return NONE
+     * @param r
+     */
     public void changeRoute(Route r) {
         if (r != null) {
             this.currentRoute = r;
@@ -74,18 +78,34 @@ public class Train {
         }
     }
     
+    /** getId is a method that simply returns the ID of a train.
+     * @param NONE
+     * @return Integer of the train ID
+     */
     public int getId() {
         return id;
     }
 
+    /** getTimeRegistered is a method that retrieves and returns the time a train is registered.
+     * @param NONE
+     * @return Integer of the time registered.
+     */
     public int getTimeRegistered() {
         return timeRegistered;
     }
 
+    /** getStartTime is a method that retrieves and returns the start time of the train's departure.
+     * @param NONE
+     * @return Integer of the time the train leaves.
+     */
     public int getStartTime() {
         return startTime;
     }
 
+    /** getCurrentLocation is a method that returns the current location of the train.
+     * @param NONE
+     * @return Current Location object showing where the train is.
+     */
     public Station getCurrentLocation() {
         return currentLocation;
     }
@@ -107,6 +127,10 @@ public class Train {
         this.currentLocation = currentLocation;
     }
 
+    /**verify is a verification method that seeks to ensure a number of things are consistent in the train.
+     * @param NONE
+     * @return Boolean value of true if verification checks are accuruate/successful, false if not.
+     */
     public boolean verify() {
         // Check if the time registered is greater than 0
         if (timeRegistered <= 0) {
