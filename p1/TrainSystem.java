@@ -21,13 +21,20 @@ public class TrainSystem {
         this.systemStatus = SystemStatus.Initialised; // Initialize system status
     }
     
-    // Station-related methods
+    /** addStation is a method that adds a new station to the route.
+     * @return NONE
+     * @param sname String object of the station.
+     */
     public void addStation(String sname) {
         Station newStation= new Station(sname);
         stations.add(newStation);
         System.out.println("Station " + sname + " added to " + name);      
     }
 
+    /** removeStation is a method that removes a station from the route.
+     * @return NONE
+     * @param sname String object of the station.
+     */
     public void removeStation(String sname) {
         for (Station station : stations) {
             if (station.getName().equals(sname)) {
@@ -38,7 +45,11 @@ public class TrainSystem {
         }
         System.out.println("Station " + sname + " not found.");
     }
-        
+    
+    /** openStation is a method that opens a station on the route based on name. 
+     * @return NONE
+     * @param sname String object of the station being opened.
+     */
     public void openStation(String sname) {
         for (Station station : stations) {
             if (station.getName().equals(sname)) {
@@ -51,6 +62,10 @@ public class TrainSystem {
     }
     
 
+    /** closeStation is a method that closes a station on a route.
+     * @return NONE
+     * @param sname The string object of the station being closed. 
+     */
     public void closeStation(String sname) {
         for (Station station : stations) {
             if (station.getName().equals(sname)) {
@@ -63,7 +78,7 @@ public class TrainSystem {
     }
     
 
-    // Segment-related methods
+    /** REVIEW */
     public void addSegment(String sname, String start, String sEnd) {
         // Find the route that corresponds to the given route name (sname)
         // Route targetRoute = null;
@@ -89,6 +104,10 @@ public class TrainSystem {
     }
     
 
+    /** removeSegment is a method that removes a segment from the route
+     * @return NONE
+     * @param sname The string object of the station.
+     */
     public void removeSegment(String sname) {
         // Find the segment in the list of segments
         Segment targetSegment = null;
@@ -112,6 +131,10 @@ public class TrainSystem {
     
     
 
+    /** openSegment is a method that opens a segment on the route.
+     * @return NONE
+     * @param sname The string object of the segment being opened.
+     */
     public void openSegment(String sname) {
         // Find the segment in the list of segments
         Segment targetSegment = null;
@@ -135,6 +158,10 @@ public class TrainSystem {
     
     
 
+    /** closeSegment is a method that closes a segment on the route.
+     * @return NONE
+     * @param sname The string object of the station being closed.
+     */
     public void closeSegment(String sname) {
         // Find the segment in the list of segments
         Segment targetSegment = null;
@@ -158,7 +185,12 @@ public class TrainSystem {
     
     
 
-    // Route-related methods
+    /** addRoute is a method that adds a new route and its stations to the list of routes.
+     * @return NONE
+     * @param rName String object of the new route.
+     * @param isRoundTrip Boolean determining whether the trip is round or not.
+     * @param rStations List of string objects of the new stations to be added to the route.
+     */
     public void addRoute(String rName, boolean isRoundTrip, List<String> rStations) {
         // Create a new Route object
         Route newRoute = new Route(rName, isRoundTrip);
@@ -181,11 +213,21 @@ public class TrainSystem {
     
     
 
+    /** removeRoute is a method that removes a route from the list of routes.
+     * REVIEW
+     * @param sname The string object of the route being removed.
+     * @return Boolean value determining whether it was successfully removed or not.
+     */
     public boolean removeRoute(String sname) {
         // Implement logic to remove a route
         // ...
         return false;
     }
+
+    /** openRoute is a method that opens a route in the list of routes.
+     * @return NONE
+     * @param sname The string object of the route being opened.
+     */
     public void openRoute(String sname) {
         for (Route route : trainRoutes) {
             if (route.getName().equals(sname)) {
@@ -197,6 +239,10 @@ public class TrainSystem {
         System.out.println("Route " + sname + " not found.");
     }
 
+    /** closeRoute method is a method that closes a route in the list of routes.
+     * @return NONE
+     * @param sname
+     */
     public void closeRoute(String sname) {
         for (Route route : trainRoutes) {
             if (route.getName().equals(sname)) {
@@ -208,15 +254,18 @@ public class TrainSystem {
         System.out.println("Route " + sname + " not found.");
     }
 
-    // Train-related methods
+    /** addTrain is a method that adds a train to the list of trains.
+     * @return NONE
+     * @param NONE
+    */
     public void addTrain() {
-        // Generate a unique ID for the new train
+        // Generates a unique ID for the new train
         int newTrainId = generateUniqueId();
     
-        // Create a new Train object with the generated ID
+        // Creates a new Train object with the generated ID
         Train newTrain = new Train(newTrainId);
     
-        // Add the new train to the trains list
+        // Adds the new train to the trains list
         trains.add(newTrain);
     
         // Optionally, add the train to the trainMap for tracking by ID
@@ -224,7 +273,11 @@ public class TrainSystem {
     
         System.out.println("Train with ID " + newTrainId + " added successfully.");
     }
-    
+    /** generateUniqueId is a method that will create a unique ID for a train.
+     * @param NONE
+     * @return An integer that represents the unique ID for the train.
+     * REVIEW
+     */
     private int generateUniqueId() {
         // Logic to generate a unique ID, such as incrementing a counter or using a UUID
         // For simplicity, we'll use a counter in this example
@@ -232,6 +285,10 @@ public class TrainSystem {
     }
     
 
+    /** removeTrain is a method that removes a train from the list based on ID.
+     * @return NONE
+     * @param id The id integer of the train being removed.
+     */
     public void removeTrain(int id) {
         for (Train train : trains) {
             if (train.getId() == id) {
@@ -244,6 +301,11 @@ public class TrainSystem {
     }
     
 
+    /** registerTrain is a method that registers a train to a route.
+     * @return NONE
+     * @param trainId ID of the train being registered
+     * @param routeName Name of the route train is being registered to.
+     */
     public void registerTrain(int trainId, String routeName) {
         // Find the train with the given ID
         Train trainToRegister = null;
@@ -279,6 +341,10 @@ public class TrainSystem {
     }
     
 
+    /** deRegisterTrain is a method that deregisters a train from the current route.
+     * @return NONE
+     * @param trainId The integer ID of the train to be deregistered.
+     */
     public void deRegisterTrain(int trainId) {
         // Find the train with the given ID
         Train trainToDeRegister = null;
@@ -300,6 +366,11 @@ public class TrainSystem {
     }
     
 
+    /**
+     * containsStation is a method that checks whether a station is present in the list of stations
+     * @param station
+     * @return Boolean value of true if the station is found and false if it is not found.
+     */
     public boolean containsStation(String station) {
         for (Station s : stations) {
             if (s.getName().equals(station)) {
@@ -309,7 +380,10 @@ public class TrainSystem {
         return false;
     }
 
-    // Check if a segment exists in the system
+    /** containsSegment is a method that checks whether a segment is present in a route. 
+     * @param segment String object referring to the name of the segment being checked.
+     * @return Boolean value of true if found and false if not.
+     */
     public boolean containsSegment(String segment) {
         for (Route route : trainRoutes) {
             if (route.containsSegment(segment)) {
@@ -319,7 +393,10 @@ public class TrainSystem {
         return false;
     }
 
-    // Check if a route exists in the system
+    /** containsRoute is a method that checks to see whether a route exists within the list.
+     * @param route String object referring to the name of the route
+     * @return Boolean value of true if found and false if not.
+     */
     public boolean containsRoute(String route) {
         for (Route r : trainRoutes) {
             if (r.getName().equals(route)) {
@@ -329,11 +406,19 @@ public class TrainSystem {
         return false;
     }
 
-    // Check if a train exists in the system
+    
+    /** containsTrain is a method that checks if a train with a specific ID exists.
+     * @param trainId Integer value of the ID of the train.
+     * @return Boolean value of true if found and false if not.
+     */
     public boolean containsTrain(int trainId) {
         return trainMap.containsKey(trainId);
     }
 
+    /** getStationByName is a method that retrives a station by its name.
+     * @param stationName The string object of the station's name.
+     * @return The desired station object if found, otherwise will return null.
+     */
     public Station getStationByName(String stationName) {
         for (Station station : stations) {
             if (station.getName().equals(stationName)) {
@@ -342,17 +427,21 @@ public class TrainSystem {
         }
         return null;
     }
-    // Get information about a segment
+    
+    /** getStationInfo is a method that retrieves information about a station.
+     * @param stationName String object of the station's name.
+     * @return String information of the station if found, otherwise returns "Station not found".
+     */
     public String getStationInfo(String stationName) {
-        // Get the station by name
+        // Gets the station by name
         Station station = getStationByName(stationName);
         
         if (station != null) {
-            // Gather information about the station
+            // Gathers information about the station
             String info = "Station Name: " + station.getName() + "\n";
             info += "Status: " + station.getStatus() + "\n";
             info += "Train: " + (station.getTrain() != null ? station.getTrain().getId() : "None") + "\n";
-            // Add more information if needed
+            // more maybe?
             
             return info;
         } else {
@@ -360,6 +449,10 @@ public class TrainSystem {
         }
     }
     
+    /** getRouteByName is a method that gets a route from the list.
+     * @param routeName String object of the route being retrieved.
+     * @return Route object if found, null if not.
+     */
     public Route getRouteByName(String routeName) {
         for (Route route : trainRoutes) {
             if (route.getName().equals(routeName)) {
@@ -369,18 +462,21 @@ public class TrainSystem {
         return null; // Route not found
     }
     
-    // Get information about a route
+    /** getRouteInfo is a method that retrieves information about the route.
+     * @param routeName String object of the route to be retrieved.
+     * @return String information about the route if found, null if not.
+     */
     public String getRouteInfo(String routeName) {
         // Find the route by name
         Route route = getRouteByName(routeName);
         
         if (route != null) {
-            // Gather information about the route
+            // Gathers information about the route
             String info = "Route Name: " + route.getName() + "\n";
             info += "Round Trip: " + route.isRoundTrip() + "\n";
             info += "Status: " + route.getStatus() + "\n";
             info += "Segments: " + route.getSegments().size() + "\n";
-            // Add more information if needed
+            
             
             return info;
         } else {
@@ -389,6 +485,10 @@ public class TrainSystem {
     }
     
 
+    /** getTrainInfo is a method that retrieves information about the Train.
+     * @param trainId Integer ID of the train to receive info.
+     * @return Train info on the desired train if found, "Train with ID {trainID} not found", if not.
+     */
     public String getTrainInfo(int trainId) {
         Train train = trainMap.get(trainId);
         if (train != null) {
@@ -399,6 +499,9 @@ public class TrainSystem {
         }
     }
     
+    /** verify is a verification method that seeks to ensure a number of things are consistent in the TrainSystem.
+     * @return Boolean value of true if verification checks are accurate, false if not.
+     */
     public boolean verify() {
         for (Station station : stations) {
             if (!station.verify()) {
@@ -429,26 +532,39 @@ public class TrainSystem {
     
     
 
+    /** setToWorking is a method that updates the system status to Operational by assigning SystemStatus.Operational value to the systemStatus attribute.
+     * @return NONE
+     * @param NONE
+     */
     public void setToWorking() {
         this.systemStatus = SystemStatus.Operational;
         System.out.println("System status set to: " + this.systemStatus.getDescription());
     }
         
 
-    // Set system status to paused
+    /** setPaused is a method that sets the system to "Deadlocked", regarding it as paused.
+     * @return NONE
+     * @param NONE
+     */
     public void setPaused() {        
         this.systemStatus = SystemStatus.Deadlocked;
         System.out.println("System status set to: " + this.systemStatus.getDescription());
     }    
     
 
-    // Set system status to stopped
+    /** setStopped is a method that sets the system to "Finished" regarding it as stopped.
+     * @return NONE
+     * @param NONE
+     */
     public void setStopped() {
         this.systemStatus = SystemStatus.Finished;
         System.out.println("System status set to: " + this.systemStatus.getDescription());
     }
 
-    // Get current system status
+    /** currentStatus is a method that displays the current status of the system.
+     * @param NONE
+     * @return The current status of the system.
+     */
     public String currentStatus() {
         return "Current system status: " + this.systemStatus.getDescription();
     }
