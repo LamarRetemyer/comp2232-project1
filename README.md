@@ -4,3 +4,6 @@ This group consists of:
 Lamar Retemyer 
 Jalique Gordon
 June Douglas
+Abigail Skepple
+
+Credit to Dr. Ilenius Ildphonce for the structure of P2. 

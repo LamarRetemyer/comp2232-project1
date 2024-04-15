@@ -1,8 +1,12 @@
-package p2;
+package p2.ts;
 
 import java.util.*;
 
 import p2.enums.SystemStatus;
+import p2.logging.Route;
+import p2.logging.Segment;
+import p2.logging.Station;
+import p2.logging.Train;
 
 public class TrainSystem {
     private String name;

@@ -15,7 +15,7 @@ public class Train {
         this.currentLocation = null; // Default value
         this.currentRoute = null; // Initialize currentRoute to null
         this.currentSegment = null; // Initialize currentSegment to null
-        // Initialize other attributes as needed
+        
     }
     public boolean isRegistered() {
         return timeRegistered > 0;
@@ -32,15 +32,14 @@ public class Train {
     
 
     public void start() {
-        // Implement logic to start the train
-        // ...
+        // NO LOGIC!! :(
     }
 
     public String currentStation() {
         if (currentLocation != null) {
             return currentLocation.getName();
         } else {
-            return "Unknown"; // or handle this case based on your design
+            return "Unknown"; 
         }
     }
     
@@ -56,12 +55,10 @@ public class Train {
             } else if (currentLocation.equals(endStation)) {
                 return startStation.getName(); // Next station is the start station of the segment
             } else {
-                // Handle the case where the current location is not the start or end station
-                // You may need additional logic based on your system's route and segment management
-                return "Unknown"; // Placeholder value, adjust as needed
+               return "Unknown"; 
             }
         } else {
-            return "Unknown"; // Placeholder value if route or segment is not set
+            return "Unknown"; 
         }
     }
 
