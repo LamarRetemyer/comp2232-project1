@@ -12,7 +12,6 @@ public class Train extends Logable implements Comparable<Train> {
     private int startTime = -1; // Immutable once set
     private String currentStation;
     private Route route;
-    private boolean isAtStart = true;
     private int waitTimeRemaining = 0;
     private ArrayList<String> stopsAt = new ArrayList<>();
     private TrainStatus status = TrainStatus.Initialised;
@@ -55,6 +54,11 @@ public class Train extends Logable implements Comparable<Train> {
         this.status = TrainStatus.Initialised;
     }
 
+    /**
+     * start is an event method that allows the train to start once it is registered and has gone through initialization.
+     * @param NONE
+     * @return The event allowing for the train to start, otherwise returns null.
+     */
     public Event start() {
         if (status == TrainStatus.Initialised && isRegistered()) {
             status = TrainStatus.Started;
@@ -63,6 +67,11 @@ public class Train extends Logable implements Comparable<Train> {
         return null;
     }
 
+    /**
+     * finish is an event method that finishes the train's movement.
+     * @param NONE
+     * @return 
+     */
     public Event finish() {
         if (status == TrainStatus.Started) {
             status = TrainStatus.Completed;
