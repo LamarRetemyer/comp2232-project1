@@ -78,23 +78,9 @@ public class TrainSystem {
     }
     
 
-    /** REVIEW */
+
     public void addSegment(String sname, String start, String sEnd) {
-        // Find the route that corresponds to the given route name (sname)
-        // Route targetRoute = null;
-        // for (Route route : trainRoutes) {
-        //     if (route.getName().equals(sname)) {
-        //         targetRoute = route;
-        //         break;
-        //     }
-        // }
-    
-        // if (targetRoute == null) {
-        //     System.out.println("Route " + sname + " not found.");
-        //     return;
-        // }
-    
-        // Create new segment based on start and end station names
+          // Create new segment based on start and end station names
         Segment newSegment = new Segment(start + "->" + sEnd); // Assuming Segment constructor takes segment name
     
         // Add the segment to the route

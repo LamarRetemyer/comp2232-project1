@@ -70,7 +70,7 @@ public class Train extends Logable implements Comparable<Train> {
     /**
      * finish is an event method that finishes the train's movement.
      * @param NONE
-     * @return 
+     * @return The event allowing for the train to end, otherwise return null.
      */
     public Event finish() {
         if (status == TrainStatus.Started) {
@@ -80,6 +80,11 @@ public class Train extends Logable implements Comparable<Train> {
         return null;
     }
 
+    /**
+     * advance is a method that allows the train to advance by a specific amount of time.
+     * @param time The amount of time to advance the train by.
+     * @return An event showing the advancement of the train, otherwise return null.
+     */
     public Event advance(int time) {
         if (time > 0 && status == TrainStatus.Started) {
             this.waitTimeRemaining = Math.max(0, this.waitTimeRemaining - time);
@@ -88,32 +93,61 @@ public class Train extends Logable implements Comparable<Train> {
         return null;
     }
 
-    // Route management
+    /** 
+     * changeRoute is a method that allows the train's route to be changed
+     * @param r The route the train will be allowed to change to.
+     * @return NONE
+     */
     public void changeRoute(Route r) {
         this.route = r;
     }
 
+    /**
+     * addStop is a method that adds another stop to the list of stops for a train.
+     * @param stop The reference to the stop that is to be added.
+     * @return NONE
+     */
     public void addStop(String stop) {
         if (!stopsAt.contains(stop)) {
             stopsAt.add(stop);
         }
     }
 
-    // Verification
+    /**
+     * verify is a method that checks and verifies a train's status in terms of registration.
+     * @param NONE
+     * @return true if the train is registered, false if not.
+     */
     public boolean verify() {
         return isRegistered() && status != TrainStatus.Initialised;
     }
 
+    /**
+     * compareTo is a method that runs a comparison between a train and another.
+     * @param train The train to be compared to.
+     * @return 
+     */
     @Override
     public int compareTo(Train train) {
         return this.name.compareTo(train.getName());
     }
 
+    /**
+     * validate is a method that validates the train's details for a journey.
+     * @param NONE
+     * @return True if the validation is successful, false if not.
+     */
     @Override
     public boolean validate() {
         return super.validate() && verify();
     }
 
+    
+    /**
+     * toString is a method that returns a string representation of the Train object.
+     * @param NONE
+     * @return A string string representation of the train object in detail.
+     */
     @Override
     public String toString() {
         return "Train [id=" + id + ", name=" + name + ", timeRegistered=" +

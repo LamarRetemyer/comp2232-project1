@@ -32,7 +32,7 @@ public class Train {
     
 
     public void start() {
-        // NO LOGIC!! :(
+        System.out.println("Train Started.")
     }
 
     public String currentStation() {
